@@ -1,0 +1,51 @@
+import json
+import os
+from datetime import datetime
+
+FILE = "expenses.json"
+
+def load_expenses():
+    if os.path.exists(FILE):
+        with open(FILE, "r") as f:
+            return json.load(f)
+    return []
+
+def save_expenses(expenses):
+    with open(FILE, "w") as f:
+        json.dump(expenses, f, indent=4)
+
+def add_expense():
+    title = input("Enter title: ")
+    amount = float(input("Enter amount: "))
+    category = input("Enter category: ")
+
+    expense = {
+        "title": title,
+        "amount": amount,
+        "category": category,
+        "date": str(datetime.now())
+    }
+
+    expenses = load_expenses()
+    expenses.append(expense)
+    save_expenses(expenses)
+    print("✅ Expense Added!")
+
+def view_expenses():
+    expenses = load_expenses()
+    total = 0
+    for exp in expenses:
+        print(f"{exp['title']} - ₹{exp['amount']} - {exp['category']} - {exp['date']}")
+        total += exp['amount']
+    print(f"\n💰 Total: ₹{total}")
+
+while True:
+    print("\n1. Add Expense\n2. View Expenses\n3. Exit")
+    choice = input("Choose: ")
+
+    if choice == "1":
+        add_expense()
+    elif choice == "2":
+        view_expenses()
+    elif choice == "3":
+        break
